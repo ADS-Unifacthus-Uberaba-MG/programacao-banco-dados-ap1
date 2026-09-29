@@ -8,15 +8,16 @@
     "db:test": "ts-node src/db/connection.ts",
     "db:queries": "ts-node src/db/queries.ts",
     "crud:test": "ts-node src/testCrud.ts"
+  
   },
   "dependencies": {
-    "pg": "^8.13.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "pg": "^8.13.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/pg": "^8.11.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.0"
+    "typescript": "^5.9.3"
   }
 }
