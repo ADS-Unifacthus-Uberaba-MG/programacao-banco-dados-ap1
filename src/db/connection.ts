@@ -10,7 +10,15 @@ export const pool = new Pool({
 });
 
 async function testarConexao() {
-  const r = await pool.query('SELECT NOW()');
-  console.log(r.rows[0]);
+  try {
+    const r = await pool.query('SELECT NOW()');
+      console.log('conexão funcionou! Horario do banco:', r.rows[0]);
+  }
+  catch (erro) {
+    console.error('Erro ao conectar no banco de dados:', erro);
+  }
 }
+
 testarConexao();
+
+
