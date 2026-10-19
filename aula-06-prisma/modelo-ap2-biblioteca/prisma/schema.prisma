@@ -1,0 +1,41 @@
+// =============================================================
+// schema.prisma — AP2 nº 1 · Biblioteca
+// Programação em Banco de Dados · UniFACTHUS · ADS 2026/02
+//
+// O generator e o datasource já estão prontos. Você escreve o model.
+// Dica: olhe o model Produto em ../exemplo-produtos/prisma/schema.prisma
+// =============================================================
+
+// Gera o Prisma Client (o "controle remoto") na pasta generated/prisma — não mexa
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+// Banco PostgreSQL. A URL fica no prisma7.config.ts (lida do .env) — não mexa
+datasource db {
+  provider = "postgresql"
+}
+
+// -------------------------------------------------------------
+// TODO (Tarefa 1): crie aqui o model Livro com os campos abaixo.
+//
+//   Campo           Tipo           Regra
+//   --------------  -------------  -----------------------------------
+//   id              inteiro        chave primária, auto incremento
+//   titulo          texto          obrigatório
+//   autor           texto          obrigatório
+//   isbn            texto          obrigatório e ÚNICO (não pode repetir)
+//   anoPublicacao   inteiro        obrigatório
+//   sinopse         texto          opcional (pode ficar vazio)
+//   disponivel      booleano       padrão true
+//   criadoEm        data/hora      padrão: agora
+//
+//   A tabela no banco deve se chamar: livros
+//
+// Lembretes:
+//   - Cada campo em UMA linha só (o Prisma não aceita quebrar um campo em várias linhas).
+//   - Opcional = "?" depois do tipo. Único = @unique. Valor padrão = @default(...).
+//   - Nome da tabela = @@map("...") no final do model.
+//   - Depois de escrever, rode: npm run db:migrate -- --name criar_livros
+// -------------------------------------------------------------
