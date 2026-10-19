@@ -1,157 +1,117 @@
-# Aula 04 — CRUD Completo e Prevenção de SQL Injection
+# Programação em Banco de Dados — AP2 nº 1 · Biblioteca com Prisma
 
 **Programação em Banco de Dados · UniFACTHUS · ADS 2026/02**
-Prof. Pierre Mendes Salatiel · 31/08/2026
+Prof. Pierre Mendes Salatiel
 
-Este projeto parte de onde a Aula 03 parou (conexão via driver puro `pg`) e
-adiciona o CRUD completo da tabela `produtos` com queries parametrizadas,
-usado na AP1 nº3.
-
-Teste commit
+A **raiz deste repositório é o projeto da AP2 nº 1**: é aqui que você
+trabalha. O exemplo completo da aula, para consultar, está em
+[`aula-06-prisma/`](aula-06-prisma/README.md).
 
 ## Aulas neste repositório
 
-| Aula | Data       | Tema                                         | Onde está                                  |
-| ---- | ---------- | -------------------------------------------- | ------------------------------------------ |
-| 03   | 24/08/2026 | Driver puro (`pg`): conexão e queries        | raiz do repositório (`src/`)               |
-| 04   | 31/08/2026 | CRUD completo e prevenção de SQL Injection   | raiz do repositório (`src/db/queries.ts`)  |
-| 06   | 19/10/2026 | ORM na prática com Prisma 7 + modelo da AP2 nº 1 | [`aula-06-prisma/`](aula-06-prisma/README.md) |
+| Aula | Data       | Tema                                           | Onde está                                          |
+| ---- | ---------- | ---------------------------------------------- | -------------------------------------------------- |
+| 03   | 24/08/2026 | Driver puro (`pg`): conexão e queries          | [`aula-04-driver-pg/`](aula-04-driver-pg/README.md) |
+| 04   | 31/08/2026 | CRUD completo e prevenção de SQL Injection     | [`aula-04-driver-pg/`](aula-04-driver-pg/README.md) |
+| 06   | 19/10/2026 | ORM na prática com Prisma 7 (exemplo completo) | [`aula-06-prisma/`](aula-06-prisma/README.md)       |
+| AP2  | 19/10/2026 | AP2 nº 1 — Biblioteca com Prisma               | **raiz** (este README)                             |
 
 ## Estrutura
 
 ```
-aula3-projeto/
-├── .env                  # credenciais do banco (não commitar!)
-├── .env.example           # modelo do .env (use se for clonar via Git)
-├── .gitignore
-├── docker-compose.yml     # sobe o PostgreSQL + cria a tabela produtos
-├── package.json
-├── package-lock.json       # versões travadas das dependências
-├── tsconfig.json
-├── sql/
-│   └── init.sql           # cria e popula a tabela "produtos"
-└── src/
-    ├── index.ts
-    ├── testCrud.ts         # script de teste manual do CRUD da AP1 nº3
-    └── db/
-        ├── connection.ts   # Pool de conexão (pronto, não mexe)
-        └── queries.ts      # onde você resolve a AP1 nº3
+(raiz)
+├── docker-compose.yml     ← o PostgreSQL da Aula 2 (serve para todas as aulas)
+├── .env.example           ← copie para .env
+├── prisma/
+│   ├── schema.prisma      ← Tarefa 1: você escreve o model Livro aqui
+│   └── seed.ts            ← popula o banco com 8 livros para teste (pronto)
+├── lib/prisma.ts          ← cria o "controle remoto" (pronto, não mexe)
+├── src/
+│   ├── cadastrar.ts       ← Tarefa 2
+│   ├── consultar.ts       ← Tarefa 3
+│   ├── emprestar.ts       ← Tarefa 4
+│   └── excluir.ts         ← Tarefa 5
+├── aula-04-driver-pg/     ← projeto das Aulas 03 e 04 (driver pg)
+└── aula-06-prisma/        ← exemplo completo da Aula 06 (consulte!)
 ```
 
-## ⚠ Se você já usou este projeto na Aula 03
+## Passo a passo
 
-O volume do Postgres (`pgdata`) já existe no seu Docker, e scripts em
-`sql/init.sql` só rodam automaticamente na **primeira** inicialização de
-um volume vazio. A tabela `produtos` da Aula 03 não tem a coluna
-`quantidade_estoque` (nova, usada na AP1 nº3). Escolha uma das opções
-abaixo antes de seguir:
-
-**Opção A — recomeçar do zero (mais simples):**
-
-```bash
-docker compose down -v
-docker compose up -d
-```
-
-Isso apaga os dados atuais do container e recria tudo, já com a tabela
-`produtos` pronta (com `quantidade_estoque`).
-
-**Opção B — manter os dados e adicionar a coluna na mão:**
-Abra o DBeaver (ou `docker exec -it postgres-aula psql -U aluno -d bdaula`)
-e rode:
-
-```sql
-ALTER TABLE produtos ADD COLUMN IF NOT EXISTS
-  quantidade_estoque INTEGER NOT NULL DEFAULT 0;
-```
-
-## Como usar
-
-0. **Se você clonou isso de um repositório Git** (em vez de baixar o zip),
-   crie seu `.env` a partir do modelo primeiro:
+1. **Crie o `.env`** a partir do modelo (na raiz):
 
    ```bash
-   cp .env.example .env
+   cp .env.example .env          # Windows: copy .env.example .env
    ```
 
-1. **Instalar dependências:**
+   Ele tem as variáveis do Docker (`POSTGRES_*`) e o `DATABASE_URL` do
+   Prisma, apontando para o banco `biblioteca` no mesmo container da Aula 2
+   (porta **5433**, `aluno` / `senha123`).
+
+2. **Suba o banco:**
+
+   ```bash
+   docker compose up -d
+   docker compose ps            # o status deve ser "Up"
+   ```
+
+3. **Instale as dependências:**
 
    ```bash
    npm install
    ```
 
-2. **Subir o banco:**
+4. **Tarefa 1 — escreva o `model Livro`** em `prisma/schema.prisma` (os
+   campos pedidos estão no comentário do arquivo) e crie a tabela. Isso
+   também cria o banco `biblioteca`:
 
    ```bash
-   docker compose up -d
+   npm run db:migrate -- --name criar_livros
    ```
 
-3. **Conferir se subiu:**
+5. **Popule o banco** com 8 livros de teste (anos antes e depois de 2000,
+   dois do Machado de Assis, um sem sinopse e um já emprestado):
 
    ```bash
-   docker compose ps
+   npm run db:seed
    ```
 
-   O status deve aparecer como `Up`.
+   Pode rodar quantas vezes quiser: ele não duplica nem apaga os livros que
+   você cadastrou. Se der erro de campo desconhecido, confira se o seu model
+   usa exatamente os nomes do enunciado.
 
-4. **Testar a conexão com o driver puro:**
+6. **Tarefas 2 a 5** — preencha os `TODO` de cada arquivo, **na ordem**, e
+   rode:
 
-   ```bash
-   npm run db:test
-   ```
+   | Tarefa | Arquivo            | Comando             |
+   | ------ | ------------------ | ------------------- |
+   | 2      | `src/cadastrar.ts` | `npm run cadastrar` |
+   | 3      | `src/consultar.ts` | `npm run consultar` |
+   | 4      | `src/emprestar.ts` | `npm run emprestar` |
+   | 5      | `src/excluir.ts`   | `npm run excluir`   |
 
-   ✅ Esperado no terminal: `{ now: 2026-08-24T... }`
+   Cada `TODO` diz qual script de `aula-06-prisma/src/` consultar. Copie,
+   cole e **adapte** (troque `produto` por `livro` e os campos).
 
-5. **Conectar no DBeaver:**
+7. **Veja os dados** no navegador: `npm run db:studio`.
 
-   | Campo    | Valor     |
-   | -------- | --------- |
-   | Host     | localhost |
-   | Porta    | **5433**  |
-   | Database | bdaula    |
-   | Usuário  | aluno     |
-   | Senha    | senha123  |
+> ℹ️ Enquanto você não criar o `model Livro` e rodar o migrate, os scripts de
+> `src/` **não funcionam** e `prisma.livro` aparece sublinhado em vermelho no
+> VS Code. Isso é esperado: o "controle remoto" ainda não tem o botão `livro`.
 
-   ⚠️ **Atenção:** a porta é **5433**, não 5432 — veja o mapeamento
-   `"5433:5432"` no `docker-compose.yml`. A porta 5432 é só a porta
-   _interna_ do container; do seu computador (DBeaver, código TypeScript)
-   você sempre acessa pela 5433.
+## Comandos
 
-6. **(Opcional) Conectar via terminal:**
+| Comando               | Para quê                                                          |
+| --------------------- | ----------------------------------------------------------------- |
+| `npm run db:migrate`  | mudou o `schema.prisma`? rode com `-- --name o_que_mudou`         |
+| `npm run db:seed`     | popula o banco com os livros de teste                             |
+| `npm run db:generate` | regenera o client (o autocomplete) sem mexer no banco             |
+| `npm run db:studio`   | abre o Prisma Studio no navegador                                 |
+| `npm run db:reset`    | ⚠ apaga TUDO do banco `biblioteca` e recria as tabelas (depois rode o `db:seed`) |
 
-   ```bash
-   docker exec -it postgres-aula psql -U aluno -d bdaula
-   ```
+Erros comuns e como resolver: veja a tabela no
+[README da Aula 06](aula-06-prisma/README.md#erros-comuns).
 
-7. **Encerrar o ambiente ao final:**
-   ```bash
-   docker compose down
-   ```
-   ⚠️ Use `docker compose down -v` só se quiser apagar os dados também.
+## 🔒 Lembrete
 
-## Onde trabalhar a AP1 nº3
-
-Todo o código da atividade entra em `src/db/queries.ts`, importando o
-`pool` já configurado de `./connection`. Implemente as 4 funções do CRUD,
-sempre com queries parametrizadas ($1, $2, ...):
-
-- `criarProduto(nome, preco, quantidade)`
-- `listarProdutos()`
-- `atualizarEstoque(id, novaQuantidade)`
-- `deletarProduto(id)`
-
-Siga o passo a passo do PDF da AP1 nº3 (`BD_Aula4_AP1n3_Enunciado.pdf`).
-
-Depois de implementar, rode `npm run crud:test` para testar as 4 funções
-em sequência (cria, lista, atualiza estoque, deleta e lista de novo).
-
-## Troubleshooting rápido
-
-- **`ECONNREFUSED`:** confirme `docker compose ps` (container precisa
-  estar `Up`) e confirme que `DB_PORT` no `.env` está `5433`.
-- **Tabela `produtos` não existe** ou **coluna `quantidade_estoque` não
-  existe:** veja a seção "Se você já usou este projeto na Aula 03" acima.
-- **Porta 5433 já em uso:** troque `"5433:5432"` por outra porta livre
-  (ex: `"5434:5432"`) no `docker-compose.yml` **e** ajuste `DB_PORT` no
-  `.env` para o mesmo valor.
-- **Container não sobe:** `docker compose logs postgres` para ver o erro.
+**Nunca suba o `.env` para o GitHub.** Ele tem a senha do banco. O
+`.gitignore` já ignora `.env`, `node_modules/` e `generated/`.

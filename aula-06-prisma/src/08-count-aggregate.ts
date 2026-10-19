@@ -23,7 +23,7 @@ async function main() {
   console.log(`Produtos sem estoque: ${semEstoque}`);
 
   if (totalProdutos === 0) {
-    console.log("\nA tabela está vazia. Rode npm run create-many primeiro.");
+    console.log("\nA tabela está vazia. Rode npm run db:seed primeiro.");
     return;
   }
 

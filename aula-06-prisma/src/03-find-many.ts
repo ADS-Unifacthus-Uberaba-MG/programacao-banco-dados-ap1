@@ -16,7 +16,7 @@ async function main() {
 
   console.log("=== Todos os produtos (sem filtro) ===");
   if (todosProdutos.length === 0) {
-    console.log("Nenhum produto cadastrado. Rode npm run create-many primeiro.");
+    console.log("Nenhum produto cadastrado. Rode npm run db:seed primeiro.");
     return;
   }
   // console.table mostra a lista em forma de tabela, fica bem mais fácil de ler

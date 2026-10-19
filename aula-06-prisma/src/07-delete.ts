@@ -5,7 +5,7 @@
 //   DELETE FROM produtos WHERE id = 7;
 //
 // Como rodar:  npm run excluir
-// (Cada execução apaga o produto de MAIOR id. Quando acabar, rode npm run create-many.)
+// (Cada execução apaga o produto de MAIOR id. Quando acabar, rode npm run db:seed.)
 // =============================================================
 import { prisma } from "../lib/prisma";
 
@@ -13,7 +13,7 @@ async function main() {
   // Buscamos um produto que existe antes de apagar (o de maior id, o mais recente).
   const produtoParaExcluir = await prisma.produto.findFirst({ orderBy: { id: "desc" } });
   if (!produtoParaExcluir) {
-    console.log("A tabela está vazia, não há o que excluir. Rode npm run create-many primeiro.");
+    console.log("A tabela está vazia, não há o que excluir. Rode npm run db:seed primeiro.");
     return;
   }
 

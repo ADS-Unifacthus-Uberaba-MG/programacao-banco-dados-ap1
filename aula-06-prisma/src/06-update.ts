@@ -20,7 +20,7 @@ async function main() {
   // Primeiro buscamos um produto que EXISTE, para não tentar atualizar um id inventado.
   const produtoAntes = await prisma.produto.findFirst({ orderBy: { id: "asc" } });
   if (!produtoAntes) {
-    console.log("A tabela está vazia. Rode npm run create-many primeiro.");
+    console.log("A tabela está vazia. Rode npm run db:seed primeiro.");
     return;
   }
 

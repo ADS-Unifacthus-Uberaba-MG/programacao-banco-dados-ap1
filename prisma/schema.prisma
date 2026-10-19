@@ -3,7 +3,7 @@
 // Programação em Banco de Dados · UniFACTHUS · ADS 2026/02
 //
 // O generator e o datasource já estão prontos. Você escreve o model.
-// Dica: olhe o model Produto em ../exemplo-produtos/prisma/schema.prisma
+// Dica: olhe o model Produto em aula-06-prisma/prisma/schema.prisma
 // =============================================================
 
 // Gera o Prisma Client (o "controle remoto") na pasta generated/prisma — não mexa
