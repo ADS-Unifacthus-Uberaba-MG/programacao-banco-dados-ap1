@@ -8,5 +8,5 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src", "lib", "prisma7.config.ts"]
+  "include": ["src", "lib", "prisma/seed.ts", "prisma7.config.ts"]
 }

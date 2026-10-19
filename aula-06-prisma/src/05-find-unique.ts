@@ -14,7 +14,7 @@ async function main() {
   // pegamos o id do primeiro produto que existir na tabela.
   const primeiroProduto = await prisma.produto.findFirst({ orderBy: { id: "asc" } });
   if (!primeiroProduto) {
-    console.log("A tabela está vazia. Rode npm run create-many primeiro.");
+    console.log("A tabela está vazia. Rode npm run db:seed primeiro.");
     return;
   }
 
@@ -50,7 +50,7 @@ async function main() {
     console.log(`Achei: #${porNome.id} ${porNome.nome} — R$ ${porNome.preco.toFixed(2)}`);
     console.log("descricao:", porNome.descricao); // este produto foi criado sem descrição: aparece null
   } else {
-    console.log(`Nenhum produto chamado "${nomeProcurado}". Rode npm run create-many primeiro.`);
+    console.log(`Nenhum produto chamado "${nomeProcurado}". Rode npm run db:seed primeiro.`);
   }
 }
 

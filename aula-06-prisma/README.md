@@ -11,23 +11,25 @@ Até a Aula 4 escrevemos SQL na mão com o driver `pg`. Hoje usamos um **ORM**
 > ⚠️ Tutoriais do Prisma 5/6 importam de `@prisma/client` — no Prisma 7 isso
 > mudou. **Siga este material.** Aqui o client vem de `../generated/prisma/client`.
 
+Esta pasta é o **exemplo completo da aula** (tabela `produtos`): rode e leia.
+A atividade **AP2 nº 1 (Biblioteca)** fica na **raiz do repositório** — veja o
+[README da raiz](../README.md).
+
 ## O que tem nesta pasta
 
 ```
 aula-06-prisma/
-├── exemplo-produtos/        ← exemplo COMPLETO da aula (rode e leia)
-│   ├── prisma/schema.prisma ← a planta: model Produto
-│   ├── prisma/migrations/   ← o SQL que o migrate gerou (abra e compare!)
-│   ├── lib/prisma.ts        ← cria o "controle remoto" (prisma)
-│   ├── lib-mysql/prisma.ts  ← versão para quem usa XAMPP
-│   └── src/01 ... 09        ← um script por operação
-└── modelo-ap2-biblioteca/   ← ESQUELETO da AP2 nº 1 (você preenche)
+├── prisma/schema.prisma   ← a planta: model Produto
+├── prisma/migrations/     ← o SQL que o migrate gerou (abra e compare!)
+├── prisma/seed.ts         ← popula o banco com produtos de exemplo
+├── lib/prisma.ts          ← cria o "controle remoto" (prisma)
+└── src/01 ... 09          ← um script por operação
 ```
 
 ## Pré-requisitos
 
 - **Node.js 24** (confira com `node -v`).
-- **Container da Aula 2 rodando.** Na raiz do repositório:
+- **Container da Aula 2 rodando.** Na **raiz** do repositório:
 
   ```bash
   docker compose up -d
@@ -44,7 +46,7 @@ aula-06-prisma/
 1. Entre na pasta:
 
    ```bash
-   cd aula-06-prisma/exemplo-produtos
+   cd aula-06-prisma
    ```
 
 2. Crie o seu `.env` a partir do modelo:
@@ -62,30 +64,38 @@ aula-06-prisma/
    npm install
    ```
 
-5. Crie a tabela no banco (a "construtora" lê a planta e executa o SQL):
+5. Crie o banco `loja` e a tabela (a "construtora" lê a planta e executa o SQL):
 
    ```bash
    npm run db:migrate -- --name criar_produtos
    ```
 
-   Se a pasta `prisma/migrations` já tiver a migration, ele só aplica no seu
+   Como a pasta `prisma/migrations` já tem a migration, ele só aplica no seu
    banco. Depois do migrate, o `prisma generate` roda sozinho.
 
-6. Rode os scripts, nesta ordem:
+6. Popule o banco com 7 produtos de exemplo:
 
    ```bash
-   npm run create-many
-   npm run create
+   npm run db:seed
+   ```
+
+   Se a tabela já tiver produtos, o seed não faz nada (pode rodar de novo sem medo).
+
+7. Rode os scripts, nesta ordem:
+
+   ```bash
    npm run listar
    npm run filtros
    npm run buscar
+   npm run create
+   npm run create-many
    npm run atualizar
    npm run excluir
    npm run contar
    npm run erros
    ```
 
-7. Veja os dados numa tela bonita, no navegador:
+8. Veja os dados numa tela bonita, no navegador:
 
    ```bash
    npm run db:studio
@@ -110,35 +120,13 @@ equivalente.
 
 Outros comandos úteis:
 
-| Comando               | Para quê                                                        |
-| --------------------- | --------------------------------------------------------------- |
+| Comando               | Para quê                                                          |
+| --------------------- | ----------------------------------------------------------------- |
 | `npm run db:migrate`  | mudou o `schema.prisma`? rode de novo com `-- --name o_que_mudou` |
-| `npm run db:generate` | regenera o client (o autocomplete) sem mexer no banco           |
-| `npm run db:studio`   | abre o Prisma Studio no navegador                               |
-| `npm run db:reset`    | ⚠ apaga TUDO do banco `loja` e recria as tabelas do zero         |
-
-## Como usar o modelo da AP2 nº 1
-
-A pasta `modelo-ap2-biblioteca/` é só o **esqueleto**: a configuração está
-pronta, mas o model e as consultas quem escreve é você.
-
-1. Copie a pasta `modelo-ap2-biblioteca` para fora (ou para o seu repositório)
-   e renomeie para **`ap2-biblioteca`**.
-2. Dentro dela: `cp .env.example .env` (Windows: `copy .env.example .env`) e
-   `npm install`. O banco dela se chama `biblioteca`.
-3. Preencha os `TODO` **na ordem das tarefas**:
-   - **Tarefa 1** → `prisma/schema.prisma`: escreva o `model Livro` e rode
-     `npm run db:migrate -- --name criar_livros`.
-   - **Tarefa 2** → `src/cadastrar.ts` → `npm run cadastrar`
-   - **Tarefa 3** → `src/consultar.ts` → `npm run consultar`
-   - **Tarefa 4** → `src/emprestar.ts` → `npm run emprestar`
-   - **Tarefa 5** → `src/excluir.ts` → `npm run excluir`
-4. Cada `TODO` diz qual script do `exemplo-produtos` consultar. Copie, cole e
-   **adapte** (troque `produto` por `livro` e os campos).
-
-> ℹ️ Enquanto você não criar o `model Livro` e rodar o migrate, os scripts de
-> `src/` **não funcionam** e `prisma.livro` aparece sublinhado em vermelho no
-> VS Code. Isso é esperado: o "controle remoto" ainda não tem o botão `livro`.
+| `npm run db:seed`     | popula o banco com os produtos de exemplo                         |
+| `npm run db:generate` | regenera o client (o autocomplete) sem mexer no banco             |
+| `npm run db:studio`   | abre o Prisma Studio no navegador                                 |
+| `npm run db:reset`    | ⚠ apaga TUDO do banco `loja` e recria as tabelas (depois rode o `db:seed`) |
 
 ## Erros comuns
 
@@ -150,21 +138,6 @@ pronta, mas o model e as consultas quem escreve é você.
 | `Cannot use import statement outside a module`             | Falta `"type": "module"` no `package.json`, ou rodou com `node`/`ts-node` | Confira o `package.json` e rode sempre com `npm run ...` (que usa o `tsx`).                         |
 | Campo/model novo não aparece no autocomplete (ou `prisma.livro` é `undefined`) | O client foi gerado antes da mudança no schema | `npm run db:migrate -- --name ...` (já regenera) ou `npm run db:generate`. No VS Code: `Ctrl+Shift+P` → "TypeScript: Restart TS Server". |
 | `We need to reset the "public" schema`                     | O `DATABASE_URL` aponta para um banco que já tem tabelas (ex.: `bdaula`) | Use o banco `loja` (exemplo) ou `biblioteca` (AP), como no `.env.example`. **Não confirme o reset no `bdaula`.** |
-
-## Plano B — MySQL/XAMPP
-
-Se o Docker não funcionar no seu computador:
-
-1. Ligue o **MySQL** no painel do XAMPP.
-2. No `prisma/schema.prisma`, troque `provider = "postgresql"` por `provider = "mysql"`.
-3. Instale o adaptador: `npm install @prisma/adapter-mariadb@^7`
-4. Copie `lib-mysql/prisma.ts` por cima de `lib/prisma.ts`.
-5. No `.env`, comente a linha do PostgreSQL e descomente o bloco do MySQL.
-6. Apague a pasta `prisma/migrations` (ela tem SQL de PostgreSQL) e rode
-   `npm run db:migrate -- --name criar_produtos`.
-
-> No MySQL, o `mode: "insensitive"` do `04-find-filtros.ts` não existe —
-> apague essa linha (o MySQL já ignora maiúsculas/minúsculas por padrão).
 
 ## 🔒 Lembrete
 
