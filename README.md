@@ -9,6 +9,14 @@ usado na AP1 nº3.
 
 Teste commit
 
+## Aulas neste repositório
+
+| Aula | Data       | Tema                                         | Onde está                                  |
+| ---- | ---------- | -------------------------------------------- | ------------------------------------------ |
+| 03   | 24/08/2026 | Driver puro (`pg`): conexão e queries        | raiz do repositório (`src/`)               |
+| 04   | 31/08/2026 | CRUD completo e prevenção de SQL Injection   | raiz do repositório (`src/db/queries.ts`)  |
+| 06   | 19/10/2026 | ORM na prática com Prisma 7 + modelo da AP2 nº 1 | [`aula-06-prisma/`](aula-06-prisma/README.md) |
+
 ## Estrutura
 
 ```
