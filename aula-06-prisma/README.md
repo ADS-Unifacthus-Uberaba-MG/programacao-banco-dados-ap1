@@ -132,6 +132,9 @@ Outros comandos úteis:
 
 | Mensagem                                                   | Causa provável                                       | Como resolver                                                                                         |
 | ---------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `failed to connect to the docker API` / `dockerDesktopLinuxEngine` | O Docker Desktop está fechado                      | Abra o Docker Desktop, espere *"Engine running"* e rode `docker compose up -d` de novo. Se não abrir: `wsl --update` como administrador. |
+| `DATABASE_URL não encontrado` / `datasource.url property is required` | Falta o `.env`, ou ele não tem o `DATABASE_URL`  | `copy .env.example .env` (Windows) ou `cp .env.example .env`.                                          |
+| `npm install` falhou com `Validation Error`                | Erro de digitação no `schema.prisma` (o `npm install` roda o `prisma generate`) | Corrija a linha apontada e rode `npm run db:generate`.                                         |
 | `Can't reach database server at localhost:5433`            | O container não está rodando, ou a porta está errada | Na raiz: `docker compose up -d` e `docker compose ps`. Confira a porta **5433** no `.env`.            |
 | `Authentication failed against database server`            | Usuário ou senha errados no `DATABASE_URL`           | Compare com o `.env` da raiz (Aula 2): `aluno` / `senha123`.                                          |
 | `Cannot find module '../generated/prisma/client'`          | O client ainda não foi gerado                        | `npm run db:generate` (ou `npm install` de novo).                                                     |
