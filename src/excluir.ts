@@ -3,7 +3,9 @@
 //
 // Como rodar:  npm run excluir
 //
-// COMO FAZER: o código já está pronto. Troque cada ___ pelo que falta.
+// COMO FAZER:
+//   - No item 5a, troque o ___ pelo trecho de código que falta.
+//   - O item 5b você escreve INTEIRO, no lugar indicado.
 // Este script exclui "O Alienista" (cadastrado no npm run cadastrar).
 // Rodando de novo, ele avisa que o livro não existe mais — e tudo bem.
 //
@@ -14,12 +16,11 @@ import { prisma } from "../lib/prisma";
 async function main() {
   // ---------------------------------------------------------
   // 5a) Busque o livro pelo ISBN ANTES de excluir.
+  //     Troque o ___ pelo objeto de opções do findUnique (o where).
   //     Veja aula-06-prisma/src/05-find-unique.ts
   // ---------------------------------------------------------
   const isbnParaExcluir = "978-85-0000-100-1"; // O Alienista
-  const livro = await prisma.livro.findUnique({
-    where: { ___: isbnParaExcluir },
-  });
+  const livro = await prisma.livro.findUnique(___);
 
   if (!livro) {
     console.log("Esse livro não existe (já foi excluído?). Rode npm run cadastrar para criá-lo de novo.");
@@ -27,20 +28,21 @@ async function main() {
   }
 
   // ---------------------------------------------------------
-  // 5b) Exclua o livro e mostre quantos sobraram.
-  //     Qual método APAGA um registro? E qual CONTA?
+  // 5b) ESCREVA VOCÊ: exclua o livro e mostre quantos sobraram.
+  //
+  //     Passo a passo:
+  //       1. exclua com prisma.livro.delete, usando o id do livro encontrado (livro.id)
+  //       2. console.log("=== 5b) Livro excluído ===") e o título do livro excluído
+  //       3. conte quantos livros restaram com prisma.livro.count()
+  //       4. console.log("Ainda restam X livros.") usando o resultado
   //     Veja aula-06-prisma/src/07-delete.ts e 08-count-aggregate.ts
+  //
+  //     Atenção: NUNCA use deleteMany() sem where — ele apaga a tabela inteira!
   // ---------------------------------------------------------
-  const livroExcluido = await prisma.livro.___({
-    where: { id: livro.id },
-  });
-  console.log("=== 5b) Livro excluído ===");
-  console.log(livroExcluido.titulo);
 
-  const quantidadeRestante = await prisma.livro.___();
-  console.log(`Ainda restam ${quantidadeRestante} livros.`);
+  // escreva o 5b aqui
 
-  // Atenção: NUNCA use deleteMany() sem where — ele apaga a tabela inteira!
+  console.log(`⚠ 5b) ainda não foi feito (livro encontrado: ${livro.titulo}) — apague esta linha quando terminar.`);
 }
 
 main()
