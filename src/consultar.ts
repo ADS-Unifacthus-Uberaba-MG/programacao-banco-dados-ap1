@@ -1,30 +1,75 @@
 // =============================================================
-// consultar.ts — Tarefa 3: consultar livros
+// consultar.ts — TAREFA 3: consultar livros
 //
 // Como rodar:  npm run consultar
 //
-// ⚠ Só funciona depois do model Livro + npm run db:migrate (Tarefa 1).
+// COMO FAZER: o código já está pronto. Troque cada ___ pelo que falta.
+// Rode o "npm run db:seed" antes, para ter livros para consultar.
+//
+// ⚠ Só funciona depois da Tarefa 1 (model Livro + npm run db:migrate).
 // =============================================================
 import { prisma } from "../lib/prisma";
 
 async function main() {
-  // TODO (Tarefa 3a): liste TODOS os livros em ordem alfabética de título.
-  //   Veja aula-06-prisma/src/03-find-many.ts (findMany + orderBy).
+  // ---------------------------------------------------------
+  // 3a) Liste TODOS os livros em ordem alfabética de título.
+  //     Por qual campo ordenar? Veja aula-06-prisma/src/03-find-many.ts
+  // ---------------------------------------------------------
+  const todosOsLivros = await prisma.livro.findMany({
+    orderBy: { ___: "asc" }, // "asc" = A até Z
+  });
+  console.log("=== 3a) Todos os livros (A → Z) ===");
+  for (const livro of todosOsLivros) {
+    console.log(`- ${livro.titulo} (${livro.autor}, ${livro.anoPublicacao})`);
+  }
 
-  // TODO (Tarefa 3b): busque só titulo e anoPublicacao dos livros de 2000 em diante.
-  //   Veja aula-06-prisma/src/04-find-filtros.ts (select + gte).
+  // ---------------------------------------------------------
+  // 3b) Busque só titulo e anoPublicacao dos livros de 2000 em diante.
+  //     Qual operador é "maior ou igual"? Veja aula-06-prisma/src/04-find-filtros.ts
+  // ---------------------------------------------------------
+  const livrosRecentes = await prisma.livro.findMany({
+    where: { anoPublicacao: { ___: 2000 } },
+    select: { titulo: true, ___: true }, // quais campos trazer
+  });
+  console.log("\n=== 3b) Livros de 2000 em diante (só título e ano) ===");
+  console.log(livrosRecentes);
 
-  // TODO (Tarefa 3c): busque os livros cujo autor contenha um pedaço de nome
-  //   (ex.: "machado"), sem diferenciar maiúsculas de minúsculas.
-  //   Veja aula-06-prisma/src/04-find-filtros.ts (contains + mode: "insensitive").
+  // ---------------------------------------------------------
+  // 3c) Busque os livros cujo autor CONTENHA "machado",
+  //     sem diferenciar maiúsculas de minúsculas.
+  //     Veja aula-06-prisma/src/04-find-filtros.ts
+  // ---------------------------------------------------------
+  const livrosDoMachado = await prisma.livro.findMany({
+    where: { autor: { ___: "machado", mode: "insensitive" } },
+  });
+  console.log('\n=== 3c) Livros com "machado" no autor ===');
+  for (const livro of livrosDoMachado) {
+    console.log(`- ${livro.titulo} (${livro.autor})`);
+  }
 
-  // TODO (Tarefa 3d): busque UM livro pelo ISBN e trate o caso de não encontrar (null).
-  //   Veja aula-06-prisma/src/05-find-unique.ts (findUnique + if).
+  // ---------------------------------------------------------
+  // 3d) Busque UM livro pelo ISBN (campo único) e trate quando não encontrar.
+  //     Qual método busca UM registro por campo único? Veja aula-06-prisma/src/05-find-unique.ts
+  // ---------------------------------------------------------
+  const isbnProcurado = "978-85-0000-001-1"; // Dom Casmurro (vem do seed)
+  const livroEncontrado = await prisma.livro.___({
+    where: { isbn: isbnProcurado },
+  });
+  console.log(`\n=== 3d) Livro com ISBN ${isbnProcurado} ===`);
+  if (livroEncontrado === null) {
+    console.log("Nenhum livro com esse ISBN. Rode npm run db:seed primeiro.");
+  } else {
+    console.log(`${livroEncontrado.titulo} — ${livroEncontrado.autor}`);
+  }
 
-  // TODO (Tarefa 3e): mostre quantos livros estão disponíveis (disponivel = true).
-  //   Veja aula-06-prisma/src/08-count-aggregate.ts (count + where).
-
-  console.log("TODO: implemente as tarefas deste arquivo.");
+  // ---------------------------------------------------------
+  // 3e) Mostre QUANTOS livros estão disponíveis.
+  //     Veja aula-06-prisma/src/08-count-aggregate.ts
+  // ---------------------------------------------------------
+  const quantidadeDisponiveis = await prisma.livro.count({
+    where: { disponivel: ___ },
+  });
+  console.log(`\n=== 3e) Livros disponíveis: ${quantidadeDisponiveis} ===`);
 }
 
 main()

@@ -3,6 +3,15 @@
 import "dotenv/config"; // carrega as variáveis do arquivo .env
 import { defineConfig } from "prisma/config";
 
+// Aviso amigável: sem o DATABASE_URL o Prisma não sabe qual banco usar.
+// Acontece quando o .env não existe, ou quando é um .env antigo (Aula 3/4) sem essa linha.
+if (!process.env["DATABASE_URL"]) {
+  console.warn("\n⚠  DATABASE_URL não encontrado no arquivo .env desta pasta.");
+  console.warn("   Crie (ou sobrescreva) o .env a partir do modelo:");
+  console.warn("     Windows:     copy .env.example .env");
+  console.warn("     Linux/Mac:   cp .env.example .env\n");
+}
+
 export default defineConfig({
   schema: "prisma/schema.prisma", // onde está a "planta" do banco
   migrations: {

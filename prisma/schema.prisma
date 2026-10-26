@@ -18,11 +18,19 @@ datasource db {
 }
 
 // -------------------------------------------------------------
-// TODO (Tarefa 1): crie aqui o model Livro com os campos abaixo.
+// TAREFA 1 — complete o model Livro
+//
+// O model já está escrito abaixo, mas COMENTADO (com // na frente) e com
+// lacunas ___ para você completar. Faça assim:
+//
+//   1. Selecione as linhas do model, lá embaixo (da linha do "model Livro {"
+//      até a linha do "}"), e tire o comentário: Ctrl + /
+//      (no teclado ABNT pode ser Ctrl + ; ). Ou apague o "// " de cada linha.
+//   2. Troque cada ___ pelo que falta, seguindo a tabela:
 //
 //   Campo           Tipo           Regra
 //   --------------  -------------  -----------------------------------
-//   id              inteiro        chave primária, auto incremento
+//   id              inteiro        chave primária, auto incremento (PRONTO)
 //   titulo          texto          obrigatório
 //   autor           texto          obrigatório
 //   isbn            texto          obrigatório e ÚNICO (não pode repetir)
@@ -30,12 +38,28 @@ datasource db {
 //   sinopse         texto          opcional (pode ficar vazio)
 //   disponivel      booleano       padrão true
 //   criadoEm        data/hora      padrão: agora
+//   tabela no banco: livros
 //
-//   A tabela no banco deve se chamar: livros
+//   3. Rode: npm run db:migrate -- --name criar_livros
 //
-// Lembretes:
-//   - Cada campo em UMA linha só (o Prisma não aceita quebrar um campo em várias linhas).
-//   - Opcional = "?" depois do tipo. Único = @unique. Valor padrão = @default(...).
-//   - Nome da tabela = @@map("...") no final do model.
-//   - Depois de escrever, rode: npm run db:migrate -- --name criar_livros
+// Dicas (olhe o model Produto em aula-06-prisma/prisma/schema.prisma):
+//   - Tipos: String (texto), Int (inteiro), Boolean (booleano), DateTime (data/hora)
+//   - Opcional = "?" colado no tipo (ex.: String?)
+//   - Único = @unique · Valor padrão = @default(...) · Agora = now()
+//   - NÃO mude os nomes dos campos: o seed (npm run db:seed) usa exatamente estes.
+//   - Se o Prisma acusar erro numa linha, confira se escreveu igual ao exemplo
+//     (ex.: @default e não @fault; autoincrement e não autoincremente).
 // -------------------------------------------------------------
+
+// model Livro {
+//   id            Int      @id @default(autoincrement())
+//   titulo        ___
+//   autor         ___
+//   isbn          String   ___
+//   anoPublicacao ___
+//   sinopse       ___
+//   disponivel    Boolean  @default(___)
+//   criadoEm      DateTime ___
+//
+//   @@map("___")
+// }
