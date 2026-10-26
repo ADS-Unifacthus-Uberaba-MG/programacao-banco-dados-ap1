@@ -26,7 +26,8 @@ datasource db {
 //   1. Selecione as linhas do model, lá embaixo (da linha do "model Livro {"
 //      até a linha do "}"), e tire o comentário: Ctrl + /
 //      (no teclado ABNT pode ser Ctrl + ; ). Ou apague o "// " de cada linha.
-//   2. Troque cada ___ pelo que falta, seguindo a tabela:
+//   2. Troque cada ___ pelo TIPO e pelos ATRIBUTOS do campo (ex.: String @unique),
+//      e o último ___ pela linha que dá o nome da tabela. Siga a tabela:
 //
 //   Campo           Tipo           Regra
 //   --------------  -------------  -----------------------------------
@@ -55,11 +56,11 @@ datasource db {
 //   id            Int      @id @default(autoincrement())
 //   titulo        ___
 //   autor         ___
-//   isbn          String   ___
+//   isbn          ___
 //   anoPublicacao ___
 //   sinopse       ___
-//   disponivel    Boolean  @default(___)
-//   criadoEm      DateTime ___
+//   disponivel    ___
+//   criadoEm      ___
 //
-//   @@map("___")
+//   ___
 // }

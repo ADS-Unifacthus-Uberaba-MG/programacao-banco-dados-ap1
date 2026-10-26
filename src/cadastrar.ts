@@ -3,8 +3,10 @@
 //
 // Como rodar:  npm run cadastrar
 //
-// COMO FAZER: o código já está pronto. Troque cada ___ pelo que falta.
-// Enquanto sobrar algum ___, o programa dá erro (ex.: "___ is not defined"):
+// COMO FAZER:
+//   - Nos itens 2a e 2b, troque cada ___ pelo trecho de código que falta.
+//   - O item 2c você escreve INTEIRO, no lugar indicado.
+// Enquanto sobrar algum ___, o programa dá erro e mostra a linha:
 // é o lembrete de que ainda falta completar.
 //
 // ⚠ Só funciona depois da Tarefa 1 (model Livro + npm run db:migrate).
@@ -14,8 +16,14 @@ import { Prisma } from "../generated/prisma/client";
 
 async function main() {
   // ---------------------------------------------------------
-  // 2a) Cadastre UM livro.
-  //     Qual método do Prisma CRIA um registro? Veja aula-06-prisma/src/01-create.ts
+  // 2a) Cadastre UM livro com create.
+  //     Troque o ___ pelo objeto com os dados do livro:
+  //       titulo: "O Alienista"
+  //       autor: "Machado de Assis"
+  //       isbn: isbnDoAlienista   (a variável logo abaixo)
+  //       anoPublicacao: 1882
+  //       sinopse: "Um médico decide estudar a loucura na cidade de Itaguaí."
+  //     Veja aula-06-prisma/src/01-create.ts
   // ---------------------------------------------------------
   const isbnDoAlienista = "978-85-0000-100-1";
 
@@ -25,14 +33,8 @@ async function main() {
   if (jaExiste) {
     console.log("=== 2a) O Alienista já estava cadastrado ===");
   } else {
-    const livroNovo = await prisma.livro.___({
-      data: {
-        titulo: "O Alienista",
-        autor: "Machado de Assis",
-        isbn: isbnDoAlienista,
-        anoPublicacao: ___, // o livro é de 1882
-        sinopse: "Um médico decide estudar a loucura na cidade de Itaguaí.",
-      },
+    const livroNovo = await prisma.livro.create({
+      data: ___,
     });
     console.log("=== 2a) Livro cadastrado ===");
     console.log(livroNovo); // repare: id, disponivel e criadoEm vieram sozinhos
@@ -40,7 +42,9 @@ async function main() {
 
   // ---------------------------------------------------------
   // 2b) Cadastre VÁRIOS livros de uma vez.
-  //     Qual método cria vários? Veja aula-06-prisma/src/02-create-many.ts
+  //     Primeiro ___: qual método cria vários registros?
+  //     Segundo ___: mostre a QUANTIDADE inserida (o que o método devolve?).
+  //     Veja aula-06-prisma/src/02-create-many.ts
   // ---------------------------------------------------------
   const resultado = await prisma.livro.___({
     data: [
@@ -52,26 +56,26 @@ async function main() {
     skipDuplicates: true, // (pronto) ignora livros cujo ISBN já existe — dá para rodar várias vezes
   });
   console.log("\n=== 2b) Livros cadastrados com createMany ===");
-  console.log(`Foram inseridos ${resultado.___} livros.`); // qual propriedade tem a QUANTIDADE?
+  console.log(`Foram inseridos ${___} livros.`);
 
   // ---------------------------------------------------------
-  // 2c) Tente cadastrar um livro com um ISBN que JÁ existe e trate o erro.
-  //     Qual é o código do erro de campo @unique repetido?
-  //     Veja aula-06-prisma/src/09-tratando-erros.ts
+  // 2c) ESCREVA VOCÊ: tente cadastrar um livro com um ISBN que JÁ existe
+  //     (use isbnDoAlienista) e trate o erro com try/catch.
+  //
+  //     Passo a passo:
+  //       1. console.log com o título "=== 2c) Tentando cadastrar um ISBN repetido ==="
+  //       2. try { ... } com um prisma.livro.create usando isbnDoAlienista
+  //          (os outros campos podem ser inventados)
+  //       3. catch (erro) { ... }:
+  //          - se for Prisma.PrismaClientKnownRequestError com código "P2002",
+  //            mostre "Já existe um livro com este ISBN!"
+  //          - senão, throw erro;
+  //     Veja aula-06-prisma/src/09-tratando-erros.ts (o mesmo esquema, com outro código)
   // ---------------------------------------------------------
-  console.log("\n=== 2c) Tentando cadastrar um ISBN repetido ===");
-  try {
-    await prisma.livro.create({
-      data: { titulo: "Livro Repetido", autor: "Fulano", isbn: isbnDoAlienista, anoPublicacao: 2020 },
-    });
-    console.log("Cadastrou (isso não deveria acontecer!).");
-  } catch (erro) {
-    if (erro instanceof Prisma.PrismaClientKnownRequestError && erro.code === "___") {
-      console.log("Já existe um livro com este ISBN!");
-    } else {
-      throw erro; // erro que não sabemos tratar: deixa aparecer
-    }
-  }
+
+  // escreva o 2c aqui
+
+  console.log("\n⚠ 2c) ainda não foi feito — apague esta linha quando terminar.");
 }
 
 main()
